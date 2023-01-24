@@ -50,8 +50,8 @@ public class WebConfigSecurity {
             .addFilterAfter(new JWTGeneratorFilter(), BasicAuthenticationFilter.class)
             .addFilterBefore(new JWTValidatorFilter(), BasicAuthenticationFilter.class)
             .authorizeHttpRequests()
-            .requestMatchers(HttpMethod.POST, "/cadastrarUsuario").hasAnyRole("ROLE_USER")
-            .requestMatchers(HttpMethod.GET,"/admin").hasAnyRole("ROLE_ADMIN")
+            // .requestMatchers(HttpMethod.POST, "/cadastrarUsuario").hasAnyRole("ROLE_USER")
+            // .requestMatchers(HttpMethod.GET,"/admin").hasAnyRole("ROLE_ADMIN")
            
            
 

@@ -10,4 +10,9 @@ public class UserController {
     public String inicio(){
         return "bem vindo a api de usuarios";
     }
+
+    @GetMapping(value = "/teste")
+    public String teste(){
+        return "teste jwt";
+    }
 }

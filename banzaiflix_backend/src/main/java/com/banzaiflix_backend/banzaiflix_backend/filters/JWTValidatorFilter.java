@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.WebUtils;
 
 import com.banzaiflix_backend.banzaiflix_backend.Interfaces.JWTInterface;
 
@@ -18,6 +19,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -26,9 +28,13 @@ public class JWTValidatorFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String jwt = request.getHeader(JWTInterface.JWT_HEADER);
-        if(jwt != null){
+        // String jwt = request.getHeader(JWTInterface.JWT_HEADER);
+        Cookie cookieJWT = WebUtils.getCookie(request, "jwt");
+        
+        
+        if(cookieJWT != null){
            try {
+            String jwt = cookieJWT.getValue().toString();
             SecretKey key = Keys.hmacShaKeyFor(JWTInterface.JWT_KEY.getBytes());
             Claims claims = Jwts.parserBuilder()
             .setSigningKey(key)
@@ -43,6 +49,8 @@ public class JWTValidatorFilter extends OncePerRequestFilter {
             // TODO: handle exception
             throw new BadCredentialsException("invalid token");
            }
+        }else{
+            throw new BadCredentialsException("invalid token");
         }
 
         filterChain.doFilter(request, response);
